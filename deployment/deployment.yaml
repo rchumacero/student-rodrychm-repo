@@ -1,12 +1,31 @@
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: student-rodrychm-app-service
-spec:
-  selector:
+  name: student-rodrychm-app
+  labels:
     app: student-rodrychm-app
-  type: LoadBalancer
-  ports:
-    - port: 80
-      targetPort: 3000
-      protocol: TCP
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: student-rodrycm-app
+  template:
+    metadata:
+      labels:
+        app: student-rodrychm-app
+    spec:
+      containers:
+        - name: student-rodrychm-app
+          image: us-central1-docker.pkg.dev/devsecops-lab-464018/student-rodrychm-app/student-rodrychm-app:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PORT
+              value: "3000"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
